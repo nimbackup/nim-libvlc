@@ -1,30 +1,26 @@
 # Simplest example of how to play a file
+# Don't forget that you can use both snake_case and camelCase
 import libvlc, os
 
 proc play(file: string) = 
   # Create new VLC instance
   let vlc = libvlc.new(0, nil)
-  # Create new media player
-  let media_player = media_player_new(vlc)
+  defer: vlc.release()
   # Set the location for our media file
-  let media = media_new_location(vlc, "file:///" & file)
-  # Set that media to be the current one
-  media_player_set_media(media_player, media)
+  let media = mediaNewLocation(vlc, "file:///" & file)
+  defer: mediaRelease(media)
+  # Create new media player with needed media
+  let mp = mediaPlayerNewFromMedia(media)
+  defer: mediaPlayerRelease(mp)
   # Start playing it
-  echo media_player_play(media_player)
+  echo mediaPlayerPlay(mp)
   # I'm not sure why, but we need to sleep a bit before
   # being able to call media_player_is_playing
   sleep(500)
   # Sleep while music is playing
-  while media_player_is_playing(media_player):
+  while mediaPlayerIsPlaying(mp):
     sleep(500)
-
-  # Release media object
-  media_release(media)
-  # Release media_player object
-  media_player_release(media_player)
-  # Release VLC instance
-  libvlc.release(vlc)
+    echo "Current position - " & $mediaPlayerGetPosition(mp)
 
 when isMainModule:
   if paramCount() < 1:

@@ -32,6 +32,8 @@ cPlugin:
     # Remove prefixes or suffixes from procs
     if sym.name.contains("libvlc_"):
       sym.name = sym.name.replace("libvlc_", "")
+    elif sym.name.contains("LIBVLC_"):
+      sym.name = sym.name.replace("LIBVLC_", "")
 
 
 cImport(baseDir / "include" / "vlc_messages.h", dynlib = "dynvlc")
