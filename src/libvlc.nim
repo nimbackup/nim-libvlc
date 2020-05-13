@@ -32,6 +32,7 @@ cPlugin:
     # Remove prefixes or suffixes from procs
     if sym.name.contains("libvlc_"):
       sym.name = sym.name.replace("libvlc_", "")
+    elif sym.name[0] == '_': sym.name = sym.name[1..^1]
     #elif sym.name.contains("LIBVLC_"):
     #  sym.name = sym.name.replace("LIBVLC_", "")
 
@@ -75,4 +76,7 @@ cOverride:
     teletext_key_blue = ord('y') shl 16
     teletext_key_index = ord('i') shl 16
 
-cImport(baseDir / "include" / "vlc" / "vlc.h", recurse = true, dynlib = "dynvlc")
+cImport(
+  baseDir / "include" / "vlc" / "vlc.h", 
+  recurse = true, dynlib = "dynvlc", flags = "-f:ast2"
+)
